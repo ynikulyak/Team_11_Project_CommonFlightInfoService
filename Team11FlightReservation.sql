@@ -58,8 +58,8 @@ CREATE TABLE `Flight` (
   `short_code` VARCHAR(30) NOT NULL, # LH454
   `from_airport_id` VARCHAR(3) NOT NULL,
   `to_airport_id` VARCHAR(3) NOT NULL,
-  `scheduled_departure_time` TIME NOT NULL,
-  `scheduled_arrival_time` TIME NOT NULL,
+  `scheduled_departure_time` DATETIME NOT NULL,
+  `scheduled_arrival_time` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_from_airport` FOREIGN KEY (`from_airport_id`) REFERENCES `Airport` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_to_airport` FOREIGN KEY (`to_airport_id`) REFERENCES `Airport` (`id`) ON DELETE NO ACTION  ON UPDATE NO ACTION,
@@ -69,28 +69,28 @@ CREATE TABLE `Flight` (
 ENGINE = InnoDB;
 
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1922","SFO","LAX","08:30:00","10:30:00");
+VALUES("AS1922","SFO","LAX","2020-05-01 08:30:00","2020-05-01 10:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1921","SFO","LAX","10:30:00","12:30:00");
+VALUES("AS1921","SFO","LAX","2020-05-01 10:30:00","2020-05-01 12:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1920","SFO","LAX","05:30:00","07:30:00");
+VALUES("AS1920","SFO","LAX","2020-05-01 05:30:00","2020-05-01 07:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1923","SFO","LAX","18:30:00","20:30:00");
+VALUES("AS1923","SFO","LAX","2020-05-01 18:30:00","2020-05-01 20:30:00");
 
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1943","LAX","SFO","09:30:00","11:30:00");
+VALUES("AS1943","LAX","SFO","2020-05-10 09:30:00","2020-05-10 11:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1942","LAX","SFO","05:30:00","07:30:00");
+VALUES("AS1942","LAX","SFO","2020-05-10 05:30:00","2020-05-10 07:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1941","LAX","SFO","12:30:00","14:30:00");
+VALUES("AS1941","LAX","SFO","2020-05-10 12:30:00","2020-05-10 14:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS1940","LAX","SFO","20:30:00","22:30:00");
+VALUES("AS1940","LAX","SFO","2020-05-10 20:30:00","2020-05-10 22:30:00");
 
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS3335","SAN","SJC","08:30:00","10:30:00");
+VALUES("AS3335","SAN","SJC","2020-06-10 08:30:00","2020-06-10 10:30:00");
 
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
-VALUES("AS3334","SJC","SAN","09:30:00","11:30:00");
+VALUES("AS3334","SJC","SAN","2020-06-20 09:30:00","2020-06-20 11:30:00");
 
 -- Table `Passenger`
 DROP TABLE IF EXISTS `Passenger`;
@@ -112,8 +112,6 @@ CREATE TABLE `Reservation` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `passenger_id` INT(11) NOT NULL,
   `flight_id` INT(11) NOT NULL,
-  `date_departure` DATE NOT NULL,
-  `date_return` DATE NOT NULL,
   `rental_car` VARCHAR(3) NULL DEFAULT 'No',
   `shuttle` VARCHAR(3) NULL DEFAULT 'No',
   `hotel` VARCHAR(3) NULL DEFAULT 'No',
