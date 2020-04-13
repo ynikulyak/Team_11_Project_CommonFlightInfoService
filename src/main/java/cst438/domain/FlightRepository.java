@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
-   
-   Optional<Flight> findByCode(String code);
-      
-   @Query("select f from Flight f where f.fromAirportId = ?1 and f.toAirportId = ?2")
-   List<Flight> findByFromAirportId(String airportCodeFrom, String airportCodeTo);
 
+   Optional<Flight> findByCode(String code);
+
+   @Query("select f from Flight f where "
+         + "f.fromAirportId = ?1 and f.toAirportId = ?2 and f.departureDateTime like ?3% "
+         + "order by f.departureDateTime")
+   List<Flight> findFlights(String airportCodeFrom, String airportCodeTo, String dateFrom);
 }

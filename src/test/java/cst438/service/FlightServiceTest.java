@@ -72,7 +72,7 @@ public class FlightServiceTest {
             new Flight(3, "AS1920", "SFO", "LAX", "2020-05-01 05:30:00", "2020-05-01 07:30:00"),
             new Flight(4, "AS1923", "SFO", "LAX", "2020-05-01 18:30:00", "2020-05-01 20:30:00"));
       
-      given(flightRepository.findByFromAirportId("SFO", "LAX")).willReturn(flights);
+      given(flightRepository.findFlights("SFO", "LAX", "2020-05-01")).willReturn(flights);
       
       Airport airportFrom = new Airport("SFO", "San Francisco International Airport",
             "San Francisco, California, United States");
@@ -94,7 +94,7 @@ public class FlightServiceTest {
              "Los Angeles, California, United States"));
       
       //real data
-      List<FlightInfo> allFlights = flightService.getAllFlights("SFO", "LAX");
+      List<FlightInfo> allFlights = flightService.getAllFlights("SFO", "LAX", "2020-05-01");
       
       assertThat(allFlights).containsAll(flightsInfo);
    }
@@ -113,9 +113,9 @@ public class FlightServiceTest {
    @Test
    public void testAllFlightNotFound() throws Exception {
       //mock
-      given(flightRepository.findByFromAirportId("000", "999")).willReturn(Collections.emptyList());
+      given(flightRepository.findFlights("000", "999", "2020-05-01")).willReturn(Collections.emptyList());
       
-      List<FlightInfo> info = flightService.getAllFlights("000", "999");
+      List<FlightInfo> info = flightService.getAllFlights("000", "999", "2020-05-01");
       
       assertThat(info.isEmpty());
    }

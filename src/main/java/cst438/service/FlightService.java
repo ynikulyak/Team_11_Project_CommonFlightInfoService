@@ -25,21 +25,15 @@ public class FlightService {
 
    @Autowired
    private FlightRepository flightRepository;
-   
+
    @Autowired
    private AirportRepository airportRepository;
 
-   // @Autowired
-   // private RabbitTemplate rabbitTemplate;
-
-   // @Autowired
-   // private FanoutExchange fanout;
-   
    public Optional<FlightInfo> getFlightByCode(String code) {
-      
+
       // find flight by code from db from table flight
       Optional<Flight> flightOptional = flightRepository.findByCode(code);
-      
+
       // if no flight was found
       if (!flightOptional.isPresent()) {
          log.warn("Flight for {} code was not found", code);
@@ -48,105 +42,100 @@ public class FlightService {
 
       // take flight object
       Flight flight = flightOptional.get();
-      
+
       long id = flight.getId();
       String fromAirportId = flight.getFromAirportId();
       String toAirportId = flight.getToAirportId();
       String departure = flight.getDeparture();
       String arrival = flight.getArrival();
-      
+
       Optional<Airport> airportOptional = airportRepository.findById(fromAirportId);
-      
-      //if no airport was found
-      if(!airportOptional.isPresent()) {
+
+      // if no airport was found
+      if (!airportOptional.isPresent()) {
          log.warn("Airport by {} id was not found", fromAirportId);
          return Optional.empty();
       }
-      
+
       Airport fromAirport = airportOptional.get();
       String fromAirportTitle = fromAirport.getTitle();
       String fromAirportLocation = fromAirport.getLocation();
-      
+
       Optional<Airport> airportToOptional = airportRepository.findById(toAirportId);
-      
-      //if no airport was found
-      if(!airportToOptional.isPresent()) {
+
+      // if no airport was found
+      if (!airportToOptional.isPresent()) {
          log.warn("Airport by {} id was nor found", toAirportId);
          return Optional.empty();
       }
-      
+
       Airport airportTo = airportToOptional.get();
-      
+
       String toAirportTitle = airportTo.getTitle();
       String toAirportLocation = airportTo.getLocation();
 
-      return Optional.of(new FlightInfo(id, code, fromAirportId, toAirportId, departure,
-            arrival, fromAirportTitle, fromAirportLocation, toAirportTitle,
-            toAirportLocation));
+      return Optional.of(new FlightInfo(id, code, fromAirportId, toAirportId, departure, arrival, fromAirportTitle,
+            fromAirportLocation, toAirportTitle, toAirportLocation));
    }
 
-   public List<FlightInfo> getAllFlights(String fromAirport, String toAirport) {
-      Optional<Airport> airportOptional = airportRepository.findById(fromAirport);
-      
-      //if no airport was found
-      if(!airportOptional.isPresent()) {
-         log.warn("Airport by {} id was not found", fromAirport);
-         return Collections.EMPTY_LIST;
+   public List<FlightInfo> getAllFlights(String fromAirport, String toAirport, String dateFrom) {
+      if (isEmpty(fromAirport) || isEmpty(toAirport) || isEmpty(dateFrom)) {
+         log.warn("Some empty strings received as parameters.");
+         throw new IllegalArgumentException("Please provide valid airports and valid dates.");
       }
       
+      Optional<Airport> airportOptional = airportRepository.findById(fromAirport);
+
+      // if no airport was found
+      if (!airportOptional.isPresent()) {
+         log.warn("Airport by {} id was not found", fromAirport);
+         return Collections.emptyList();
+      }
+
       Airport airportFrom = airportOptional.get();
-      
+
       String fromAirportTitle = airportFrom.getTitle();
       String fromAirportLocation = airportFrom.getLocation();
-      
+
       Optional<Airport> airportToOptional = airportRepository.findById(toAirport);
-      
-      //if no airport was found
-      if(!airportToOptional.isPresent()) {
+
+      // if no airport was found
+      if (!airportToOptional.isPresent()) {
          log.warn("Airport by {} id was not found", toAirport);
-         return Collections.EMPTY_LIST;
+         return Collections.emptyList();
       }
-      
-   // return list of flights from db from table flight that match 
-      List<Flight> flights = flightRepository.findByFromAirportId(fromAirport, toAirport);
+
+      // return list of flights from db from table flight that match
+      List<Flight> flights = flightRepository.findFlights(fromAirport, toAirport, dateFrom);
       // if list is empty
       if (flights.isEmpty()) {
          log.warn("Flights from {} to {} were not found", fromAirport, toAirport);
-         return Collections.EMPTY_LIST;
+         return Collections.emptyList();
       }
-      
-      
+
       Airport airportTo = airportToOptional.get();
       String toAirportTitle = airportTo.getTitle();
       String toAirportLocation = airportTo.getLocation();
-      
+
       List<FlightInfo> flightsInfo = new ArrayList<>();
-      
-      for(Flight f : flights) {
+
+      for (Flight f : flights) {
          long id = f.getId();
          String code = f.getCode();
          String fromAirportId = f.getFromAirportId();
          String toAirportId = f.getToAirportId();
          String departure = f.getDeparture();
-         String arrival = f.getArrival(); 
-         
-         FlightInfo info = new FlightInfo(id, code, fromAirportId, toAirportId, departure,
-               arrival, fromAirportTitle, fromAirportLocation, toAirportTitle,
-               toAirportLocation);
+         String arrival = f.getArrival();
+
+         FlightInfo info = new FlightInfo(id, code, fromAirportId, toAirportId, departure, arrival, fromAirportTitle,
+               fromAirportLocation, toAirportTitle, toAirportLocation);
          flightsInfo.add(info);
       }
 
       return flightsInfo;
    }
 
-   // methods that will write a message to an exchange using the RabbitTemplate
-   // class provided by Spring
-   /*
-    * public void requestReservation(String airportId, String airportName, String
-    * airportLocation) { String msg = "{\"airportId\": \"" + airportId +
-    * "\" \"airportName\": \"" + airportName + "\" \"airportLocation\": \"" +
-    * airportLocation + "\"}"; System.out.println("Sending message:" + msg);
-    * rabbitTemplate.convertSendAndReceive(fanout.getName(), "", // routing key
-    * none. msg); }
-    */
+   private static boolean isEmpty(String value) {
+      return value == null || "".equals(value.trim());
+   }
 }

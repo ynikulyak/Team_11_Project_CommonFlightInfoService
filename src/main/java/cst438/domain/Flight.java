@@ -13,9 +13,9 @@ public class Flight {
    private String fromAirportId;
    private String toAirportId;
    @Column(name="scheduled_departure_time")
-   private String departure;
+   private String departureDateTime;
    @Column(name="scheduled_arrival_time")
-   private String arrival;
+   private String returnDateTime;
    
    public Flight() {
       this(0, "nul", "nul", "nul", "zero", "zero");
@@ -27,8 +27,8 @@ public class Flight {
       this.code = code;
       this.fromAirportId = fromAirportId;
       this.toAirportId = toAirportId;
-      this.departure = departure;
-      this.arrival = arrival;
+      this.departureDateTime = departure;
+      this.returnDateTime = arrival;
    }
    
    public long getId() {
@@ -58,23 +58,23 @@ public class Flight {
    }
    
    public String getDeparture() {
-      return departure;
+      return departureDateTime;
    }
    public void setDeparture(String departure) {
-      this.departure = departure;
+      this.departureDateTime = departure;
    }
    
    public String getArrival() {
-      return arrival;
+      return returnDateTime;
    }
    public void setArrival(String arrival) {
-      this.arrival = arrival;
+      this.returnDateTime = arrival;
    }
 
    @Override
    public String toString() {
       return "Flight [code=" + code + ", airport from=" + fromAirportId + ", airport to=" + toAirportId+ ", departure = " + 
-   departure + ", arrival = " + arrival + "]";
+   departureDateTime + ", arrival = " + returnDateTime + "]";
    }
 }
 
