@@ -77,6 +77,55 @@ public class FlightService {
       return Optional.of(new FlightInfo(id, code, fromAirportId, toAirportId, departure, arrival, fromAirportTitle,
             fromAirportLocation, toAirportTitle, toAirportLocation));
    }
+   
+   public Optional<FlightInfo> getFlightById(long id) {
+
+      // find flight by code from db from table flight
+      Optional<Flight> flightOptional = flightRepository.findById(id);
+
+      // if no flight was found
+      if (!flightOptional.isPresent()) {
+         log.warn("Flight for {} id was not found", id);
+         return Optional.empty();
+      }
+
+      // take flight object
+      Flight flight = flightOptional.get();
+
+      String code = flight.getCode();
+      String fromAirportId = flight.getFromAirportId();
+      String toAirportId = flight.getToAirportId();
+      String departure = flight.getDeparture();
+      String arrival = flight.getArrival();
+
+      Optional<Airport> airportOptional = airportRepository.findById(fromAirportId);
+
+      // if no airport was found
+      if (!airportOptional.isPresent()) {
+         log.warn("Airport by {} id was not found", fromAirportId);
+         return Optional.empty();
+      }
+
+      Airport fromAirport = airportOptional.get();
+      String fromAirportTitle = fromAirport.getTitle();
+      String fromAirportLocation = fromAirport.getLocation();
+
+      Optional<Airport> airportToOptional = airportRepository.findById(toAirportId);
+
+      // if no airport was found
+      if (!airportToOptional.isPresent()) {
+         log.warn("Airport by {} id was nor found", toAirportId);
+         return Optional.empty();
+      }
+
+      Airport airportTo = airportToOptional.get();
+
+      String toAirportTitle = airportTo.getTitle();
+      String toAirportLocation = airportTo.getLocation();
+
+      return Optional.of(new FlightInfo(id, code, fromAirportId, toAirportId, departure, arrival, fromAirportTitle,
+            fromAirportLocation, toAirportTitle, toAirportLocation));
+   }
 
    public List<FlightInfo> getAllFlights(String fromAirport, String toAirport, String dateFrom) {
       if (isEmpty(fromAirport) || isEmpty(toAirport) || isEmpty(dateFrom)) {

@@ -36,7 +36,19 @@ public class FlightRestController {
          return flight.get();
       }
 
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Airport not found: " + code);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found: " + code);
+   }
+   
+   @GetMapping("/api/flight/v1/id/{id}")
+   public FlightInfo getFlightById(@PathVariable("id") long id) {
+
+      Optional<FlightInfo> flight = flightService.getFlightById(id);
+      // return airportInfo object in form of JSON if object present
+      if (flight.isPresent()) {
+         return flight.get();
+      }
+
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found: " + id);
    }
 
    @GetMapping("/api/flights/v1/{from}/{to}")
