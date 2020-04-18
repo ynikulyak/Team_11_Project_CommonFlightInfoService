@@ -90,32 +90,20 @@ VALUES("AS3335","SAN","SJC","2020-06-10 08:30:00","2020-06-10 10:30:00");
 INSERT INTO `Flight` (`short_code`,`from_airport_id`,`to_airport_id`,`scheduled_departure_time`,`scheduled_arrival_time`) 
 VALUES("AS3334","SJC","SAN","2020-06-20 09:30:00","2020-06-20 11:30:00");
 
--- Table `Passenger`
-DROP TABLE IF EXISTS `Passenger`;
-CREATE TABLE IF NOT EXISTS `Passenger` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `firstName` VARCHAR(50) NOT NULL,
-  `lastName` VARCHAR(50) NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
-  `username` VARCHAR(50) NOT NULL,
-  `user_password_hash` BINARY(128) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `username_index` (`username`)
-)
-ENGINE = InnoDB;
-
 -- Table `Reservation`
 DROP TABLE IF EXISTS `Reservation`;
 CREATE TABLE IF NOT EXISTS `Reservation` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `passenger_id` INT(11) NOT NULL,
+  `firstName` VARCHAR(50) NOT NULL,
+  `lastName` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `passport_number` VARCHAR(100) NOT NULL,
   `flight_id` INT(11) NOT NULL,
   `rental_car` VARCHAR(3) NULL DEFAULT 'No',
   `shuttle` VARCHAR(3) NULL DEFAULT 'No',
   `hotel` VARCHAR(3) NULL DEFAULT 'No',
   `seat_pref` VARCHAR(15) NULL DEFAULT 'No Preference',
   PRIMARY KEY (`id`),
-  INDEX `passenger_id_index` (`passenger_id`),
   INDEX `flight_id_index` (`flight_id`)
 )
 ENGINE = InnoDB;
